@@ -1,0 +1,16 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{168B5672-40F3-EB89-4C11-23AA6B35B4BA}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Mastering",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	]
+}
