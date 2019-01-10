@@ -38,3 +38,39 @@ void AMasteringWeapon::Tick(float DeltaTime)
 
 }
 
+void AMasteringWeapon::Fire(FRotator ControlRotation, class UAnimInstance* AnimInst)
+{
+	//try and fire a projectile
+	if (ProjectileClass != nullptr)
+	{
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
+		{
+			/**MuzzleOffset is in camera space so transform it to world space
+			before offset from the character location to find the final muzzle position
+			*/
+			const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation()) + ControlRotation.RotateVector(GunOffset);
+
+			//Set spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			//spawn projectile at the muzzle
+			World->SpawnActor<AMasteringProjectile>(ProjectileClass, SpawnLocation, ControlRotation, ActorSpawnParams);
+		}
+	}
+	//try and play the sound if specified
+	if (FireSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+	}
+	//try and play animation if specified
+	if (FireAnimation != nullptr)
+	{
+		//Get the animation object for the arms mesh
+		if (AnimInst != nullptr)
+		{
+			AnimInst->Montage_Play(FireAnimation, 1.f);
+		}
+	}
+}

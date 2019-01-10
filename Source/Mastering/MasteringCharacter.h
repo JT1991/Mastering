@@ -86,7 +86,14 @@ protected:
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	TouchData	TouchItem;
-	
+
+	class AMasteringWeapon* EquippedWeaponActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	class UMasteringInventory *Inventory;
+
+
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
@@ -103,8 +110,17 @@ protected:
 public:
 	/** Returns Mesh1P subobject **/
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	/**Equip a weapon */
+	void EquipWeapon(TSubclassOf<class AMasteringWeapon> Weapon);
+
+	/**Get the currently equipped weapon */
+	FORCEINLINE class AMasteringWeapon* GetEquippedWeapon() const { return EquippedWeaponActor; }
+
+	/** Get this character's inventory */
+	FORCEINLINE class UMasteringInventory* GetInventory() const { return Inventory; }
 };
 
