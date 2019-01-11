@@ -51,7 +51,6 @@ AMasteringCharacter::AMasteringCharacter()
 	L_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("L_MotionController"));
 	L_MotionController->SetupAttachment(RootComponent);
 
-
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
 }
@@ -68,7 +67,7 @@ void AMasteringCharacter::BeginPlay()
 	//Equip our best weapon on startup
 	if (Inventory != nullptr)
 	{
-		Inventory->SelectBestWeapon(this);
+		Inventory->SelectBestWeapon();
 	}
 	
 }
@@ -86,7 +85,7 @@ void AMasteringCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	//PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMasteringCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMasteringCharacter::OnFire);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -112,7 +111,7 @@ void AMasteringCharacter::OnFire()
 	if (GetEquippedWeapon() != nullptr)
 	{
 		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		GetEquippedWeapon()->Fire(GetControlRotation(), AnimInstance);
+		GetEquippedWeapon()->Fire(GetControlRotation(), AnimInstance, Inventory);
 	}
 }
 
@@ -129,7 +128,7 @@ void AMasteringCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const 
 	}
 	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
 	{
-		//OnFire();
+		OnFire();
 	}
 	TouchItem.bIsPressed = true;
 	TouchItem.FingerIndex = FingerIndex;

@@ -53,7 +53,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	// Fire the weapon
-	void Fire(FRotator ControlRotation, class UAnimInstance* AnimInst);
+	void Fire(FRotator ControlRotation, class UAnimInstance* AnimInst, class UMasteringInventory* Inventory);
 
 
 };

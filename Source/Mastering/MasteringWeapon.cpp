@@ -2,6 +2,7 @@
 
 #include "MasteringWeapon.h"
 #include "MasteringProjectile.h"
+#include "MasteringInventory.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 #include "Runtime/Engine/Classes/Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -28,7 +29,7 @@ AMasteringWeapon::AMasteringWeapon()
 void AMasteringWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -38,7 +39,7 @@ void AMasteringWeapon::Tick(float DeltaTime)
 
 }
 
-void AMasteringWeapon::Fire(FRotator ControlRotation, class UAnimInstance* AnimInst)
+void AMasteringWeapon::Fire(FRotator ControlRotation, class UAnimInstance* AnimInst, class UMasteringInventory* Inventory)
 {
 	//try and fire a projectile
 	if (ProjectileClass != nullptr)
@@ -73,4 +74,6 @@ void AMasteringWeapon::Fire(FRotator ControlRotation, class UAnimInstance* AnimI
 			AnimInst->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+	// reduce ammo by one
+	Inventory->ChangeAmmo(GetClass(), -1);
 }
