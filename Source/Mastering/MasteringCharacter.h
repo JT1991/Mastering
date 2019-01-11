@@ -74,6 +74,10 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
+	/** Scroll up and down inventory */
+	void SelectNextWeapon();
+	void SelectPreviousWeapon();
+
 	struct TouchData
 	{
 		TouchData() { bIsPressed = false;Location=FVector::ZeroVector;}

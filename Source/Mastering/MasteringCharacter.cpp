@@ -103,6 +103,11 @@ void AMasteringCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("TurnRate", this, &AMasteringCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMasteringCharacter::LookUpAtRate);
+
+	//Cycling Inventory
+	PlayerInputComponent->BindAction("InventoryUp", IE_Pressed, this, &AMasteringCharacter::SelectNextWeapon);
+	PlayerInputComponent->BindAction("InventoryDown", IE_Pressed, this, &AMasteringCharacter::SelectPreviousWeapon);
+
 }
 
 void AMasteringCharacter::OnFire()
@@ -226,6 +231,16 @@ bool AMasteringCharacter::EnableTouchscreenMovement(class UInputComponent* Playe
 	}
 	
 	return false;
+}
+
+void AMasteringCharacter::SelectNextWeapon()
+{
+	Inventory->SelectNextWeapon();
+}
+
+void AMasteringCharacter::SelectPreviousWeapon()
+{
+	Inventory->SelectPreviousWeapon();
 }
 
 void AMasteringCharacter::EquipWeapon(TSubclassOf<class AMasteringWeapon> Weapon)

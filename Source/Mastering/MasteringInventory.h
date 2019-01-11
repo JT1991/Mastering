@@ -45,6 +45,15 @@ public:
 	/**Select a weapon from inventory */
 	void SelectWeapon(TSubclassOf<AMasteringWeapon> Weapon);
 	
+	/** Find current weapon's index */
+	int FindCurrentWeaponIndex() const;
+
+	/** Go "up" one weapon in inventory*/
+	void SelectNextWeapon();
+
+	/** Go "down" one weapon in inventory*/
+	void SelectPreviousWeapon();
+
 	/**Add weapon to inventory list */
 	void AddWeapon(TSubclassOf<class AMasteringWeapon> Weapon, int AmmoCount, uint8 WeaponPower);
 
@@ -56,6 +65,8 @@ public:
 
 	/** Change weapon ammo count */
 	void ChangeAmmo(TSubclassOf<class AMasteringWeapon> Weapon, const int ChangeAmount);
+
+
 
 protected:
 	TArray <FWeaponProperties> WeaponsArray;
