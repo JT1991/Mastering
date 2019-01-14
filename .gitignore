@@ -4,6 +4,11 @@
 # Visual Studio 2015 database file
 *.VC.db
 
+#
+*/Content/InfinityBladeWeapons
+*/Content/ArbitraryStudio
+*/Content/Ammo
+
 # Compiled Object files
 *.slo
 *.lo
