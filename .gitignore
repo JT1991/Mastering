@@ -5,9 +5,9 @@
 *.VC.db
 
 #
-*/Content/InfinityBladeWeapons
-*/Content/ArbitraryStudio
-*/Content/Ammo
+Content/InfinityBladeWeapons/*
+Content/ArbitraryStudio/*
+Content/Ammo/*
 
 # Compiled Object files
 *.slo
