@@ -43,7 +43,7 @@ void AMasteringIconsCamera::BeginPlay()
 	TArray<FAssetData> AssetDatas;
 	ObjectLibrary->GetAssetDataList(AssetDatas);
 
-	/* Iterate the ObjectLirbaray list of assets */
+	/* Iterate the Object Library list of assets */
 	for (auto itr : AssetDatas)
 	{
 		FSoftObjectPath assetPath(itr.ObjectPath.ToString());
@@ -129,12 +129,12 @@ FVector AMasteringIconsCamera::ComputeActorLocation()
 	FVector BoxExtent;
 	CurrentWeaponPickup->GetActorBounds(false, InPos, BoxExtent);
 
-	//* uncomment these to view the actor bounding generated for our pick-ups
+	/* uncomment these to view the actor bounding generated for our pick-ups
 	FVector CurrentPosition = CurrentWeaponPickup->GetActorLocation();
 	FColor fcRandom(FMath::RandRange(64, 255), FMath::RandRange(64, 255), FMath::RandRange(64, 255));
 	DrawDebugLine(World, CurrentPosition, CurrentPosition + InPos, fcRandom, false, 20.0f);
 	DrawDebugBox(World, CurrentPosition + InPos, 0.5f * BoxExtent, FQuat(ForceInitToZero), fcRandom, false, 20.0f);
-	//
+	*/
 
 	/* uncomment these to view the mesh bounding imported with the assets (set in 3D modeling software etc)
 	FBoxSphereBounds bsMesh = Mesh->Bounds;

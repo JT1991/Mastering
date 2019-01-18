@@ -19,6 +19,20 @@ void AMasteringWeaponPickup::BeginPlay()
 	
 }
 
+void AMasteringWeaponPickup::HavePlayerPickup(class AMasteringCharacter* Player)
+{
+	UMasteringInventory *Inventory = Player->GetInventory();
+
+	FWeaponProperties Props(WeaponClass, InventoryIcon, WeaponPower, Ammunition);
+	Inventory->AddWeapon(Props);
+
+	//here we automatically select the best weapon which may have changed after adding the above,
+	//NOTE: this should be an option the player can turn ON/OFF in UI
+	Inventory->SelectBestWeapon();
+
+	Destroy();
+}
+
 void AMasteringWeaponPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	AMasteringCharacter *player = Cast <AMasteringCharacter>(OtherActor);
@@ -27,15 +41,7 @@ void AMasteringWeaponPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		return;
 	}
-
-	UMasteringInventory *Inventory = player->GetInventory();
-
-	Inventory->AddWeapon(WeaponClass, Ammunition, WeaponPower);
-
-	// here we automatically select the best weapon ehivh may have changed after adding the above
-	//NOTE this should probably be an option the player can turn off/on in UI
-	Inventory->SelectBestWeapon();
-	Destroy();
+	HavePlayerPickup(player);
 }
 
 // Called every frame

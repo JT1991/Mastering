@@ -15,6 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	AMasteringWeaponPickup();
 
+	void HavePlayerPickup(class AMasteringCharacter* Player);
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,13 +30,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AMasteringWeapon> WeaponClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UTexture2D* InventoryIcon;
+	
 	/** How fast the pickup spins while on the ground, degrees/second */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float RotationSpeed = 30.0f;
 
 	/** How much ammunition is provided for this weapon on pick-up */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	uint8 Ammunition = 10;
+	int Ammunition = 10;
 
 	/** THis weapon's relative power compared to others */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)

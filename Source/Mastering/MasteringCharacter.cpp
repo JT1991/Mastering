@@ -12,6 +12,7 @@
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "MasteringInventory.h"
 #include "MasteringWeapon.h"
+#include "MasteringHUD.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -60,14 +61,11 @@ void AMasteringCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	/**implement in weapon class
-	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-	*/
-	//Equip our best weapon on startup
-	if (Inventory != nullptr)
+
+	AMasteringHUD* HUD = Cast<AMasteringHUD>(CastChecked<APlayerController>(GetController())->GetHUD());
+	if (HUD != nullptr)
 	{
-		Inventory->SelectBestWeapon();
+		HUD->InitializeInventory(Inventory);
 	}
 	
 }
@@ -131,10 +129,7 @@ void AMasteringCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const 
 	{
 		return;
 	}
-	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
-	{
-		OnFire();
-	}
+	
 	TouchItem.bIsPressed = true;
 	TouchItem.FingerIndex = FingerIndex;
 	TouchItem.Location = Location;
@@ -146,6 +141,10 @@ void AMasteringCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FV
 	if (TouchItem.bIsPressed == false)
 	{
 		return;
+	}
+	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
+	{
+		OnFire();
 	}
 	TouchItem.bIsPressed = false;
 }
@@ -251,6 +250,8 @@ void AMasteringCharacter::EquipWeapon(TSubclassOf<class AMasteringWeapon> Weapon
 	
 	if (EquippedWeaponActor != nullptr)
 	{
+		if (EquippedWeaponActor->IsA(Weapon))
+			return;
 		World->DestroyActor(EquippedWeaponActor);
 	} 
 

@@ -2,6 +2,7 @@
 
 #include "MasteringInventory.h"
 #include "MasteringCharacter.h"
+#include "MasteringWeaponPickup.h"
 
 
 #define UNLIMITED_AMMO -1
@@ -16,16 +17,19 @@ UMasteringInventory::UMasteringInventory()
 }
 
 
-// Called when the game starts
-void UMasteringInventory::BeginPlay()
-{
-	Super::BeginPlay();
 
-	if (DefaultWeapon != nullptr)
+void UMasteringInventory::AddDefaultWeapon() 
+{
+
+	if (DefaultWeaponPickup != nullptr)
 	{
-		//Since we don't use pick-up for this weapon, given power of 0.
-		AddWeapon(DefaultWeapon, UNLIMITED_AMMO, 0);
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		//spawn a pickup and immediatly add to our player
+		AMasteringWeaponPickup* defaultPickup = GetWorld()->SpawnActor<AMasteringWeaponPickup>(DefaultWeaponPickup, FVector(0.0f), FRotator(0.0f), ActorSpawnParams);
 	}
+
 }
 
 int UMasteringInventory::FindCurrentWeaponIndex() const
@@ -46,11 +50,10 @@ void UMasteringInventory::SelectNextWeapon()
 	int currentIndex = FindCurrentWeaponIndex();
 	if (currentIndex == WeaponsArray.Num() - 1) // end of array
 	{
-		SelectWeapon(WeaponsArray[0].WeaponClass);
+		SelectWeapon(WeaponsArray[0]);
 	}
 	else
 	{
-		SelectWeapon(WeaponsArray[currentIndex + 1].WeaponClass);
 	}
 }
 
@@ -59,17 +62,17 @@ void UMasteringInventory::SelectPreviousWeapon()
 	int currentIndex = FindCurrentWeaponIndex();
 	if (currentIndex > 0)
 	{
-		SelectWeapon(WeaponsArray[currentIndex - 1].WeaponClass);
+		SelectWeapon(WeaponsArray[currentIndex - 1]);
 	}
 	else
 	{
-		SelectWeapon(WeaponsArray[WeaponsArray.Num() - 1].WeaponClass);
+		SelectWeapon(WeaponsArray[WeaponsArray.Num() - 1]);
 	}
 }
 void UMasteringInventory::SelectBestWeapon()
 {
 	int highestWeaponPower = CurrentWeaponPower;
-	TSubclassOf<class AMasteringWeapon> bestWeapon = nullptr;
+	FWeaponProperties bestWeapon;
 	for (auto WeaponIt = WeaponsArray.CreateIterator(); WeaponIt; ++WeaponIt)
 	{
 		//TODO add criteria for selecting weapon
@@ -82,48 +85,44 @@ void UMasteringInventory::SelectBestWeapon()
 		{
 			highestWeaponPower = currentProps.WeaponPower;
 			CurrentWeaponPower = highestWeaponPower;
-			bestWeapon = currentProps.WeaponClass;
+			bestWeapon = currentProps;
 		}
 	}
 
-	if (bestWeapon != nullptr)
+	if (bestWeapon.WeaponClass != nullptr)
 	{
 		SelectWeapon(bestWeapon);
 	}
 }
 
-void UMasteringInventory::SelectWeapon(TSubclassOf<class AMasteringWeapon> Weapon)
+void UMasteringInventory::SelectWeapon(FWeaponProperties Weapon)
 {
-	MyOwner->EquipWeapon(Weapon);
-	CurrentWeapon = Weapon;
+	OnSelectedWeaponChanged.Broadcast(Weapon);
+	MyOwner->EquipWeapon(Weapon.WeaponClass);
+	CurrentWeapon = Weapon.WeaponClass;
 }
 
-void UMasteringInventory::AddWeapon(TSubclassOf<class AMasteringWeapon> Weapon, int AmmoCount, uint8 WeaponPower)
+void UMasteringInventory::AddWeapon(const FWeaponProperties &Properties)
 {
-	for (auto WeaponIt = WeaponsArray.CreateIterator(); WeaponIt; ++WeaponIt)
+	int foundIndex = WeaponsArray.Find(Properties);
+	if (foundIndex != INDEX_NONE)
 	{
-		FWeaponProperties &currentProps = *WeaponIt;
-		if (currentProps.WeaponClass == Weapon)
-		{
-			checkSlow(AmmoCount >= 0);
-			currentProps.Ammo += AmmoCount;
-			return; 
-		}
+		FWeaponProperties &currentProps = WeaponsArray[foundIndex];
+		checkSlow(Properties.Ammo >= 0 || Properties.Ammo == UNLIMITED_AMMO);
+		currentProps.Ammo += Properties.Ammo;
 	}
-	
-	FWeaponProperties weaponProps;
-	weaponProps.WeaponClass = Weapon;
-	weaponProps.WeaponPower = WeaponPower;
-	weaponProps.Ammo = AmmoCount;
-
-	WeaponsArray.Add(weaponProps);
+	else
+	{
+		WeaponsArray.Add(Properties);
+		OnWeaponAdded.Broadcast(Properties);
+	}
 }
 
 void UMasteringInventory::ChangeAmmo(TSubclassOf<class AMasteringWeapon> Weapon, const int ChangeAmount)
 {
-	for (auto WeaponIt = WeaponsArray.CreateIterator(); WeaponIt; ++WeaponIt)
+	for (int i = 0; i < WeaponsArray.Num(); i++)
 	{
-		FWeaponProperties &currentProps = *WeaponIt;
+		FWeaponProperties &currentProps = WeaponsArray[i];
 		if (currentProps.WeaponClass == Weapon)
 		{
 			if (currentProps.Ammo == UNLIMITED_AMMO)
@@ -134,9 +133,10 @@ void UMasteringInventory::ChangeAmmo(TSubclassOf<class AMasteringWeapon> Weapon,
 			if (currentProps.Ammo == 0)//gun is out of ammo
 			{
 				CurrentWeaponPower = -1; //force to slect any better weapon that has ammo
+				OnWeaponRemoved.Broadcast(currentProps);
+				WeaponsArray.RemoveAt(i);
 				SelectBestWeapon();
 			}
-			
 			return; 
 		}
 
