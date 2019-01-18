@@ -28,6 +28,7 @@ void UMasteringInventory::AddDefaultWeapon()
 
 		//spawn a pickup and immediatly add to our player
 		AMasteringWeaponPickup* defaultPickup = GetWorld()->SpawnActor<AMasteringWeaponPickup>(DefaultWeaponPickup, FVector(0.0f), FRotator(0.0f), ActorSpawnParams);
+		defaultPickup->HavePlayerPickup(MyOwner);
 	}
 
 }
@@ -54,6 +55,7 @@ void UMasteringInventory::SelectNextWeapon()
 	}
 	else
 	{
+		SelectWeapon(WeaponsArray[currentIndex + 1]);
 	}
 }
 
