@@ -106,6 +106,9 @@ void AMasteringCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("InventoryUp", IE_Pressed, this, &AMasteringCharacter::SelectNextWeapon);
 	PlayerInputComponent->BindAction("InventoryDown", IE_Pressed, this, &AMasteringCharacter::SelectPreviousWeapon);
 
+	//MainMenu
+	PlayerInputComponent->BindAction("MainMenu", IE_Pressed, this, &AMasteringCharacter::ToggleMainMenu);
+
 }
 
 void AMasteringCharacter::OnFire()
@@ -266,5 +269,32 @@ void AMasteringCharacter::EquipWeapon(TSubclassOf<class AMasteringWeapon> Weapon
 	if (EquippedWeaponActor != nullptr)
 	{	//Attach gun mesh component to skeleton
 		EquippedWeaponActor->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Grippoint"));
+	}
+}
+
+
+void AMasteringCharacter::ToggleMainMenu()
+{
+	AMasteringHUD* HUD = Cast<AMasteringHUD>(CastChecked<APlayerController>(GetController())->GetHUD());
+	if (HUD != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ToggleMainMenu called"));
+		HUD->ToggleMainMenu();
+	}
+}
+
+void AMasteringCharacter::SetInventory(UMasteringInventory* Inv)
+{
+	Inventory = Inv;
+	InitializeInventoryHUD();
+}
+
+void AMasteringCharacter::InitializeInventoryHUD()
+{
+	APlayerController* player = CastChecked<APlayerController>(GetController());
+	AMasteringHUD* HUD = CastChecked<AMasteringHUD>(player->GetHUD());
+	if (HUD != nullptr)
+	{
+		HUD->InitializeInventory(Inventory);
 	}
 }
