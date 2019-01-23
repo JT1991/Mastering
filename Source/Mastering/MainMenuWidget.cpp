@@ -259,15 +259,15 @@ void UMainMenuWidget::SaveGame()
 	}
 
 	//Serialize to binary for output
-	FBufferArchive BinaryData;
+	FBufferArchive SaveData;
 	SaveGameData.SavedActors = SavedActors;
-	BinaryData << SaveGameData;
+	SaveData << SaveGameData;
 	//Save data
 	FString outPath = FPaths::ProjectSavedDir() + SaveGameData.TimeStamp.ToString() + TEXT(".sav");
-	FFileHelper::SaveArrayToFile(BinaryData, *outPath);
+	FFileHelper::SaveArrayToFile(SaveData, *outPath);
 	
-	BinaryData.FlushCache();
-	BinaryData.Empty();
+	SaveData.FlushCache();
+	SaveData.Empty();
 	//set mouse to hidden, unpause game, and close main menu
 	APlayerController* playerController = World->GetFirstPlayerController();
 	if (playerController)
