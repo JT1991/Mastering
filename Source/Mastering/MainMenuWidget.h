@@ -35,6 +35,6 @@ public:
 	static TArray<uint8> BinaryData;
 
 protected:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TArray<FString> SaveFileNames;
 };

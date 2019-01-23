@@ -75,6 +75,10 @@ public:
 	/**Get currently selected weapon */
 	FORCEINLINE TSubclassOf<class AMasteringWeapon> GetCurrentWeapon() const { return CurrentWeapon; }
 
+	FORCEINLINE TArray<FWeaponProperties>& GetWeaponsArray() { return WeaponsArray; }
+
+	FORCEINLINE int GetCurrentWeaponPower() const { return CurrentWeaponPower; }
+
 	/** Change weapon ammo count */
 	void ChangeAmmo(TSubclassOf<class AMasteringWeapon> Weapon, const int ChangeAmount);
 

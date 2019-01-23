@@ -2,10 +2,11 @@
 
 #include "MasteringWeapon.h"
 #include "MasteringProjectile.h"
-#include "MasteringInventory.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 #include "Runtime/Engine/Classes/Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "MasteringInventory.h"
+
 
 // Sets default values
 AMasteringWeapon::AMasteringWeapon()
@@ -25,19 +26,6 @@ AMasteringWeapon::AMasteringWeapon()
 	MuzzleLocation->SetupAttachment(WeaponMesh);
 }
 
-// Called when the game starts or when spawned
-void AMasteringWeapon::BeginPlay()
-{
-	Super::BeginPlay();
-
-}
-
-// Called every frame
-void AMasteringWeapon::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void AMasteringWeapon::Fire(FRotator ControlRotation, class UAnimInstance* AnimInst, class UMasteringInventory* Inventory)
 {

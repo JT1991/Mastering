@@ -79,12 +79,9 @@ void AMasteringHUD::ToggleMainMenu()
 {
 	if (MainMenu != nullptr)
 	{
-		if (MainMenu != nullptr)
-		{
-			if (MainMenu->GetVisibility() == ESlateVisibility::Visible)
-				MainMenu->Close();
-			else
-				MainMenu->Open();
-		}
+		if (MainMenu->GetVisibility() == ESlateVisibility::Visible)
+			MainMenu->Close();
+		else
+			MainMenu->Open();
 	}
 }

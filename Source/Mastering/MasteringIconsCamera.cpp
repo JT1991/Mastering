@@ -170,7 +170,7 @@ void AMasteringIconsCamera::OnFinishedLoadingAssets()
 	UWorld* World = GetWorld();
 
 	//convert soft references to hard references
-	for (auto itr = WeaponBlueprintSoftRefs.CreateIterator(); itr; itr++)
+	for (auto itr = WeaponBlueprintSoftRefs.CreateIterator(); itr; ++itr)
 	{
 		UBlueprint *BPObj = CastChecked<UBlueprint>((*itr).ResolveObject());
 		WeaponBlueprints.Add(BPObj);

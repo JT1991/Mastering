@@ -33,51 +33,12 @@ void UMasteringInventory::AddDefaultWeapon()
 
 }
 
-int UMasteringInventory::FindCurrentWeaponIndex() const
-{
-	int currentIndex = 0;
-	for (auto WeaponIt = WeaponsArray.CreateConstIterator(); WeaponIt; ++WeaponIt, ++currentIndex)
-	{
-		const FWeaponProperties &currentProps = *WeaponIt;
-		if (currentProps.WeaponClass == CurrentWeapon)
-			break;
-	}
-	checkSlow(currentIndex < WeaponsArray.Num());
-	return currentIndex;
-}
-
-void UMasteringInventory::SelectNextWeapon()
-{
-	int currentIndex = FindCurrentWeaponIndex();
-	if (currentIndex == WeaponsArray.Num() - 1) // end of array
-	{
-		SelectWeapon(WeaponsArray[0]);
-	}
-	else
-	{
-		SelectWeapon(WeaponsArray[currentIndex + 1]);
-	}
-}
-
-void UMasteringInventory::SelectPreviousWeapon()
-{
-	int currentIndex = FindCurrentWeaponIndex();
-	if (currentIndex > 0)
-	{
-		SelectWeapon(WeaponsArray[currentIndex - 1]);
-	}
-	else
-	{
-		SelectWeapon(WeaponsArray[WeaponsArray.Num() - 1]);
-	}
-}
 void UMasteringInventory::SelectBestWeapon()
 {
 	int highestWeaponPower = CurrentWeaponPower;
 	FWeaponProperties bestWeapon;
-	for (auto WeaponIt = WeaponsArray.CreateIterator(); WeaponIt; ++WeaponIt)
+	for (auto WeaponIt = WeaponsArray.CreateConstIterator(); WeaponIt; ++WeaponIt)
 	{
-		//TODO add criteria for selecting weapon
 		const FWeaponProperties &currentProps = *WeaponIt;
 
 		//skip weapons with no ammo, ammo of -1 means unlimited
@@ -99,10 +60,54 @@ void UMasteringInventory::SelectBestWeapon()
 
 void UMasteringInventory::SelectWeapon(FWeaponProperties Weapon)
 {
+	checkf(Weapon.WeaponClass != nullptr, TEXT("Weapon equip attempted with null class!"));
 	OnSelectedWeaponChanged.Broadcast(Weapon);
 	MyOwner->EquipWeapon(Weapon.WeaponClass);
 	CurrentWeapon = Weapon.WeaponClass;
 }
+
+
+int UMasteringInventory::FindCurrentWeaponIndex() const
+{
+	int currentIndex = 0;
+	for (auto WeaponIt = WeaponsArray.CreateConstIterator(); WeaponIt; ++WeaponIt, ++currentIndex)
+	{
+		const FWeaponProperties &currentProps = *WeaponIt;
+		if (currentProps.WeaponClass == CurrentWeapon)
+			break;
+	}
+	checkSlow(currentIndex < WeaponsArray.Num());
+	return currentIndex;
+}
+
+
+void UMasteringInventory::SelectNextWeapon()
+{
+	int currentIndex = FindCurrentWeaponIndex();
+	if (currentIndex >= WeaponsArray.Num() - 1) // end of array
+	{
+		SelectWeapon(WeaponsArray[0]);
+	}
+	else if (WeaponsArray.Num() > 0)
+	{
+		SelectWeapon(WeaponsArray[currentIndex + 1]);
+	}
+}
+
+
+void UMasteringInventory::SelectPreviousWeapon()
+{
+	int currentIndex = FindCurrentWeaponIndex();
+	if (currentIndex > 0)
+	{
+		SelectWeapon(WeaponsArray[currentIndex - 1]);
+	}
+	else 
+	{
+		SelectWeapon(WeaponsArray[WeaponsArray.Num() - 1]);
+	}
+}
+
 
 void UMasteringInventory::AddWeapon(const FWeaponProperties &Properties)
 {
@@ -122,7 +127,7 @@ void UMasteringInventory::AddWeapon(const FWeaponProperties &Properties)
 
 void UMasteringInventory::ChangeAmmo(TSubclassOf<class AMasteringWeapon> Weapon, const int ChangeAmount)
 {
-	for (int i = 0; i < WeaponsArray.Num(); i++)
+	for (int i = 0; i < WeaponsArray.Num(); ++i)
 	{
 		FWeaponProperties &currentProps = WeaponsArray[i];
 		if (currentProps.WeaponClass == Weapon)
