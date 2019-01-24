@@ -27,6 +27,11 @@ public:
 	void Stealth();
 	void UnStealth();
 
+	virtual bool IsStealthed()
+	{
+		return bIsStealthed;
+	}
+
 protected:
 	bool bIsStealthed = false;
 
