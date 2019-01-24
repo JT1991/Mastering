@@ -15,6 +15,29 @@ class MASTERING_API AMeleeAIController : public AAIController
 	GENERATED_BODY()
 	
 public:
+	AMeleeAIController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTargetChange(class AMasteringCharacter* Target);
+
+	UFUNCTION(BlueprintCallable)
+	class AMasteringCharacter* GetTarget();
+
+	virtual void BeginPlay() override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting")
-	float HearingRadius = 300.0f;
+	class USphereComponent* HearingSphere;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting")
+	float HearingRadius = 1000.0f;
+
+protected:
+	UFUNCTION()
+	void OnHearingOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+		const FHitResult& SweepResult);
+	
+	UPROPERTY()
+	AMasteringCharacter* CurrentTarget = nullptr;
+
 };
