@@ -32,11 +32,11 @@ public:
 	virtual void BeginPlay() override;
 
 	//AI Targeting Controls
-	UPROPERTY(BlueprintReadOnly, Category = "Targeting")
+	UPROPERTY(VisibleAnywhere, Category = "Targeting")
 	class USphereComponent* HearingSphere;
-	UPROPERTY(BlueprintReadOnly, Category = "Targeting")
+	UPROPERTY(VisibleAnywhere, Category = "Targeting")
 	class USphereComponent* StealthHearingSphere;
-	UPROPERTY(BlueprintReadOnly, Category = "Targeting")
+	UPROPERTY(VisibleAnywhere, Category = "Targeting")
 	class USphereComponent* SightSphere;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting")
 	float HearingRadius = 600.f;
@@ -54,9 +54,11 @@ protected:
 	void OnHearingOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 		const FHitResult& SweepResult);
-
+	
+	UFUNCTION()
 	void OnStealthHearingOverlap(UPrimitiveComponent* OverlappedComp, AActor * Other, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
+	
+	UFUNCTION()
 	void OnSightOverlap(UPrimitiveComponent* OverlappedComp, AActor * Other, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	void SetPotentialTarget(AActor* Other);
