@@ -48,12 +48,12 @@ void AMeleeAIController::OnReturnedHome()
 	SightSphere->SetSphereRadius(SightRadius);
 }
 
-void AMeleeAIController::BeginPlay()
+void AMeleeAIController::Possess(APawn * InPawn)
 {
-	Super::BeginPlay();
+	Super::Possess(InPawn);
 
 	HomeLocation = GetPawn()->GetNavAgentLocation();
-	
+
 	HearingSphere->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	StealthHearingSphere->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	SightSphere->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
@@ -88,7 +88,7 @@ void AMeleeAIController::OnSightOverlap(UPrimitiveComponent*OverlappedComp, AAct
 						const FHitResult& SweepResult)
 {
 	APawn* Owner = GetPawn();
-	if (Owner == Other)
+	if (Owner == nullptr || Owner == Other)
 	{
 		return;
 	}

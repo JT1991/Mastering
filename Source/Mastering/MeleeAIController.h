@@ -29,7 +29,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnReturnedHome();
 
-	virtual void BeginPlay() override;
+	virtual void Possess(APawn* InPawn) override;
 
 	//AI Targeting Controls
 	UPROPERTY(VisibleAnywhere, Category = "Targeting")
@@ -48,6 +48,8 @@ public:
 	float SightAngle = 75.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting")
 	float AttackRadius = 120.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Health")
+	float Health = 100.0f;
 
 protected:
 	UFUNCTION()
@@ -60,7 +62,8 @@ protected:
 	
 	UFUNCTION()
 	void OnSightOverlap(UPrimitiveComponent* OverlappedComp, AActor * Other, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
+	
+	UFUNCTION(BlueprintCallable)
 	void SetPotentialTarget(AActor* Other);
 	
 	UPROPERTY()

@@ -42,6 +42,7 @@ void AMasteringWeapon::Fire(FRotator ControlRotation, class UAnimInstance* AnimI
 
 			//Set spawn Collision Handling Override
 			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.Instigator = Cast<APawn>(GetOwner());
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 			//spawn projectile at the muzzle
