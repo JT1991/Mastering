@@ -47,6 +47,7 @@ struct FInventoryItemData
 		return Ar;
 	}
 };
+
 USTRUCT()
 struct FInventorySavedData
 {
@@ -106,4 +107,7 @@ class ISavedActorInterface
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Load-Save")
 	void ActorLoaded();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Load-Save")
+	void ActorSaved();
 };
