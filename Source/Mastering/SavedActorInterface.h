@@ -74,6 +74,7 @@ struct FGameSavedData
 	FDateTime TimeStamp;
 	FName MapName;
 	FInventorySavedData InventoryData;
+	FVector PlayerSafeLocation = FVector::ZeroVector;
 	TArray<FActorSavedData> SavedActors;
 
 	friend FArchive& operator<<(FArchive& Ar, FGameSavedData& GameData)
@@ -81,6 +82,7 @@ struct FGameSavedData
 		Ar << GameData.MapName;
 		Ar << GameData.TimeStamp;
 		Ar << GameData.InventoryData;
+		Ar << GameData.PlayerSafeLocation;
 		Ar << GameData.SavedActors;
 		return Ar;
 	}
