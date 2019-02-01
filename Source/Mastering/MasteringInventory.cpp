@@ -160,7 +160,6 @@ void UMasteringInventory::CopyFromOther(UMasteringInventory *Other, class AMaste
 		WeaponsArray.Add(prop);
 	}
 
-	DefaultWeaponPickup = Other->DefaultWeaponPickup;
 	CurrentWeapon = Other->GetCurrentWeapon();
 	CurrentWeaponPower = Other->GetCurrentWeaponPower();
 	MyOwner = ownerOverride == nullptr ? Other->GetOwningCharacter() : ownerOverride;

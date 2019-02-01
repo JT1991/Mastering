@@ -13,5 +13,22 @@ UCLASS()
 class MASTERING_API ALevelTransitionVolume : public ATriggerBox
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+	FORCEINLINE FVector GetPlayerSafeLocation() const
+	{
+		if (PlayerSafeLocation.IsZero())
+		{
+			UE_LOG(LogTemp, Error, TEXT("Using uninitialized player safe location on Transition volume!"));
+		}
+		return PlayerSafeLocation;
+	}
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString TransitionLevel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector PlayerSafeLocation = FVector::ZeroVector;
 };

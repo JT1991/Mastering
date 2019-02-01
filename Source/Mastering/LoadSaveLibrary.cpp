@@ -34,6 +34,8 @@ void LoadSaveLibrary::LoadGameFile(FString SaveFile, UWorld* World)
 		return;
 	}
 
+	checkSlow(World != nullptr);
+
 	FMemoryReader FromBinary = FMemoryReader(BinaryData, true);
 	FromBinary.Seek(0);
 
@@ -50,7 +52,7 @@ void LoadSaveLibrary::LoadGameFile(FString SaveFile, UWorld* World)
 	FString mapName = SaveGameData.MapName.ToString();
 	FString currentMapName = World->GetMapName();
 
-	currentMapName.Split("UEDPIE_o_", nullptr, &currentMapName);
+	currentMapName.Split("UEDPIE_0_", nullptr, &currentMapName);
 
 	if (mapName == currentMapName)
 	{
@@ -64,12 +66,12 @@ void LoadSaveLibrary::LoadGameFile(FString SaveFile, UWorld* World)
 
 void LoadSaveLibrary::SaveGameFile(FString SaveFile, UWorld* World)
 {
-	checkSlow(World !- nullptr);
+	checkSlow(World != nullptr);
 	FGameSavedData SaveGameData;
 	FString outPath = FPaths::ProjectSavedDir() + SaveFile;
 	SaveGameData.TimeStamp = FDateTime::Now();
 	FString mapName = World->GetMapName();
-	mapName.Split("UEDPIE_o_", nullptr, &mapName);
+	mapName.Split("UEDPIE_0_", nullptr, &mapName);
 	SaveGameData.MapName = *mapName;
 
 	UMasteringGameInstance* gameInst = UMasteringGameInstance::GetInstance();

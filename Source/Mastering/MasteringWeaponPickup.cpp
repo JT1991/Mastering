@@ -35,7 +35,7 @@ void AMasteringWeaponPickup::HavePlayerPickup(class AMasteringCharacter* Player)
 
 void AMasteringWeaponPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	AMasteringCharacter *player = Cast <AMasteringCharacter>(OtherActor);
+	AMasteringCharacter *player = Cast<AMasteringCharacter>(OtherActor);
 
 	if (player == nullptr)
 	{

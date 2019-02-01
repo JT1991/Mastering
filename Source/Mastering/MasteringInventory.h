@@ -84,7 +84,7 @@ public:
 	/** Change weapon ammo count */
 	void ChangeAmmo(TSubclassOf<class AMasteringWeapon> Weapon, const int ChangeAmount);
 
-	void CopyFromOther(UMasteringInventory * Other, AMasteringCharacter * ownerOverride = nullptr);
+	void CopyFromOther(UMasteringInventory *Other, AMasteringCharacter* ownerOverride = nullptr);
 
 	void Reset();
 
