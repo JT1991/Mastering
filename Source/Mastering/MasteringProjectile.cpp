@@ -3,6 +3,9 @@
 #include "MasteringProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
 
 AMasteringProjectile::AMasteringProjectile() 
 {
@@ -33,7 +36,7 @@ AMasteringProjectile::AMasteringProjectile()
 
 void AMasteringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
+	// Only add impulse and destroy projectile if we hit physics objects.
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
 		AController* controller = GetInstigatorController();
@@ -51,5 +54,27 @@ void AMasteringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 			Destroy();
 		}
 
+	}
+
+	EPhysicalSurface surfType = SurfaceType_Default;
+	if (OtherComp->GetBodyInstance() != nullptr && OtherComp->GetBodyInstance()->GetSimplePhysicalMaterial() != nullptr)
+	{
+		surfType = OtherComp->GetBodyInstance()->GetSimplePhysicalMaterial()->SurfaceType;
+	}
+
+	USoundCue* cueToPlay = nullptr;
+	for (auto physSound : ImpactSounds)
+	{
+		if (physSound.SurfaceType == surfType)
+		{
+			cueToPlay = physSound.SoundCue;
+			break;
+		}
+	}
+
+	const float minVelocity = 400.0f; //to stop small bounces at end of projectiles lifetime.
+	if (cueToPlay != nullptr && GetVelocity().Size() > minVelocity)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, cueToPlay, Hit.Location);
 	}
 }

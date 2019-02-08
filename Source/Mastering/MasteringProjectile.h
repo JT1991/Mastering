@@ -6,6 +6,19 @@
 #include "GameFramework/Actor.h"
 #include "MasteringProjectile.generated.h"
 
+USTRUCT(BlueprintType)
+struct FPhysSound
+{
+	GENERATED_USTRUCT_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<EPhysicalSurface> SurfaceType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USoundCue* SoundCue;
+};
+
+
 UCLASS(config=Game, transient)
 class AMasteringProjectile : public AActor
 {
@@ -31,7 +44,10 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE class UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Damage")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	float DamageAmount = 5.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FPhysSound> ImpactSounds;
 };
 
