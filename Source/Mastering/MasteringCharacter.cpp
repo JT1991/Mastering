@@ -1,6 +1,7 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "MasteringCharacter.h"
+#include "Engine/World.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -288,11 +289,14 @@ void AMasteringCharacter::SetInventory(UMasteringInventory* Inv)
 
 void AMasteringCharacter::InitializeInventoryHUD()
 {
-	APlayerController* player = CastChecked<APlayerController>(GetController());
-	AMasteringHUD* HUD = Cast<AMasteringHUD>(player->GetHUD());
-	if (HUD != nullptr)
+	APlayerController* player = Cast<APlayerController>(GetController());
+	if (player != nullptr)// Otherwise bug in simulated play in editor.
 	{
-		HUD->InitializeInventory(Inventory);
+		AMasteringHUD* HUD = Cast<AMasteringHUD>(player->GetHUD());
+		if (HUD != nullptr)
+		{
+			HUD->InitializeInventory(Inventory);
+		}
 	}
 }
 
