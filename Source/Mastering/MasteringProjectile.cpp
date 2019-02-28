@@ -72,9 +72,14 @@ void AMasteringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 		}
 	}
 
-	const float minVelocity = 400.0f; //to stop small bounces at end of projectiles lifetime.
+	const float minVelocity = 1000.0f; //to stop small bounces at end of projectiles lifetime.
 	if (cueToPlay != nullptr && GetVelocity().Size() > minVelocity)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, cueToPlay, Hit.Location);
+		FRotator rot = GetVelocity().ToOrientationRotator();
+		UGameplayStatics::SpawnEmitterAttached(ImpactParticles, GetRootComponent(), NAME_None,
+												FVector::ZeroVector, rot, 
+												EAttachLocation::SnapToTargetIncludingScale, true);
 	}
+
 }
