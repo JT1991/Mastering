@@ -48,7 +48,7 @@ void AMeleeAIController::OnReturnedHome()
 	SightSphere->SetSphereRadius(SightRadius);
 }
 
-void AMeleeAIController::Possess(APawn * InPawn)
+void AMeleeAIController::OnPossess(APawn * InPawn)
 {
 	Super::Possess(InPawn);
 

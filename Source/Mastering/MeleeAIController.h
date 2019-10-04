@@ -29,7 +29,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnReturnedHome();
 
-	virtual void Possess(APawn* InPawn) override;
+	virtual void OnPossess(APawn* InPawn) override;
 
 	//AI Targeting Controls
 	UPROPERTY(VisibleAnywhere, Category = "Targeting")
